@@ -86,7 +86,7 @@ public class IndexFiles {
             // buffer.  But if you do this, increase the max heap
             // size to the JVM (eg add -Xmx512m or -Xmx1g):
             //
-            // iwc.setRAMBufferSizeMB(256.0);
+            iwc.setRAMBufferSizeMB(256.0);
 
             IndexWriter writer = new IndexWriter(dir, iwc);
             indexDocs(writer, docDir);
