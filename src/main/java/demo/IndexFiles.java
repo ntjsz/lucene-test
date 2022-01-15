@@ -37,6 +37,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -87,7 +88,7 @@ public class IndexFiles {
             // size to the JVM (eg add -Xmx512m or -Xmx1g):
             //
             iwc.setRAMBufferSizeMB(256.0);
-
+            System.setProperty(ConcurrentMergeScheduler.DEFAULT_SPINS_PROPERTY, "false");
             IndexWriter writer = new IndexWriter(dir, iwc);
             indexDocs(writer, docDir);
 
