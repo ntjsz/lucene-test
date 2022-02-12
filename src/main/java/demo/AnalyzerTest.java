@@ -12,7 +12,7 @@ public class AnalyzerTest {
     public static void main(String[] args) throws IOException {
         Analyzer analyzer = new StandardAnalyzer(); // or any other analyzer
 
-        TokenStream ts = analyzer.tokenStream("myfield", new StringReader("some text goes here"));
+        TokenStream ts = analyzer.tokenStream("myfield", new StringReader("some some 棒 text哇 goes here"));
         // The Analyzer class will construct the Tokenizer, TokenFilter(s), and CharFilter(s),
         //   and pass the resulting Reader to the Tokenizer.
         OffsetAttribute offsetAtt = ts.addAttribute(OffsetAttribute.class);
@@ -28,6 +28,8 @@ public class AnalyzerTest {
                 System.out.println("  token end offset: " + offsetAtt.endOffset());
             }
             ts.end();   // Perform end-of-stream operations, e.g. set the final offset.
+            String s = ts.reflectAsString(true);
+            System.out.println(s);
         } finally {
             ts.close(); // Release resources associated with this stream.
         }
