@@ -1,4 +1,4 @@
-package demo;
+package demo.test;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
