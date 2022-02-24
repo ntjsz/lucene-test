@@ -49,6 +49,13 @@ public class MultiThreadIndexTest {
      * Index all text files under a directory.
      */
     public static void main(String[] args) {
+        Thread thread = new Thread(MultiThreadIndexTest::oneThread);
+        thread.start();
+        oneThread();
+    }
+
+
+    public static void oneThread() {
         String indexPath = "index";
         String docsPath = "src/main/resources/doc";
         boolean create = false;
