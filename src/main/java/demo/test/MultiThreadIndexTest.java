@@ -88,7 +88,7 @@ public class MultiThreadIndexTest {
                     e.printStackTrace();
                 }
             });
-//            thread.start();
+            thread.start();
             indexDocs(writer, docDir);
 
             // NOTE: if you want to maximize search performance,

@@ -61,7 +61,7 @@ public class IndexFiles {
      */
     public static void main(String[] args) {
         String indexPath = "index";
-        String docsPath = "src/main/resources/doc/doc-src.txt";
+        String docsPath = "src/main/resources/doc";
         boolean create = true;
         final Path docDir = Paths.get(docsPath);
 
