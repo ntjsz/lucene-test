@@ -49,19 +49,9 @@ public class SearchFiles {
      * Simple command-line based search demo.
      */
     public static void main(String[] args) throws Exception {
-        String usage =
-                "Usage:\tjava org.apache.lucene.demo.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-query string] [-raw] [-paging hitsPerPage]\n\nSee http://lucene.apache.org/core/4_1_0/demo/ for details.";
-        if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
-            System.out.println(usage);
-            System.exit(0);
-        }
-
         String index = "index";
         String field = "contents";
-        String queries = null;
-        int repeat = 0;
-        boolean raw = false;
-        String queryString = null;
+        String queryString = "treat we taught";
         int hitsPerPage = 10;
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
@@ -79,6 +69,10 @@ public class SearchFiles {
         ScoreDoc[] hits = results.scoreDocs;
         Date end = new Date();
         System.out.println("Time: " + (end.getTime() - start.getTime()) + "ms");
+        System.out.println(results.totalHits);
+        for (ScoreDoc hit : hits) {
+            System.out.println(hit);
+        }
 
 //        doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
 
