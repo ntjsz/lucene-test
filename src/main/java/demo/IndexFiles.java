@@ -29,7 +29,9 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.LongPoint;
@@ -60,6 +62,9 @@ public class IndexFiles {
      * Index all text files under a directory.
      */
     public static void main(String[] args) {
+        List<Long> pointList = Lists.newArrayList(453L, 100002152L, 200005234L, 300003834L, 400003451L,
+                500004123L, 600004321L, 700005135L, 800002355L);
+
         String indexPath = "index";
         String docsPath = "src/main/resources/doc";
         boolean create = true;
@@ -90,7 +95,7 @@ public class IndexFiles {
             iwc.setRAMBufferSizeMB(256.0);
             System.setProperty(ConcurrentMergeScheduler.DEFAULT_SPINS_PROPERTY, "false");
             IndexWriter writer = new IndexWriter(dir, iwc);
-            indexDocs(writer, docDir);
+            indexDocs(writer, docDir, pointList);
 
             // NOTE: if you want to maximize search performance,
             // you can optionally call forceMerge here.  This can be
@@ -126,28 +131,17 @@ public class IndexFiles {
      * @param path   The file to index, or the directory to recurse into to find files to index
      * @throws IOException If there is a low-level I/O error
      */
-    static void indexDocs(final IndexWriter writer, Path path) throws IOException {
-        if (Files.isDirectory(path)) {
-            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    try {
-                        indexDoc(writer, file, attrs.lastModifiedTime().toMillis());
-                    } catch (IOException ignore) {
-                        // don't index files that can't be read.
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } else {
-            indexDoc(writer, path, Files.getLastModifiedTime(path).toMillis());
+    static void indexDocs(final IndexWriter writer, Path path, List<Long> pointList) throws IOException {
+        for (int i = 0; i < pointList.size(); i++) {
+            Path file = path.resolve(i + ".txt");
+            indexDoc(writer, file, pointList.get(i));
         }
     }
 
     /**
      * Indexes a single document
      */
-    static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
+    static void indexDoc(IndexWriter writer, Path file, long someLongPoint) throws IOException {
         try (InputStream stream = Files.newInputStream(file)) {
             // make a new, empty document
             Document doc = new Document();
@@ -166,7 +160,7 @@ public class IndexFiles {
             // year/month/day/hour/minutes/seconds, down the resolution you require.
             // For example the long value 2011021714 would mean
             // February 17, 2011, 2-3 PM.
-            doc.add(new LongPoint("modified", lastModified));
+            doc.add(new LongPoint("modified", someLongPoint));
 
             // Add the contents of the file to a field named "contents".  Specify a Reader,
             // so that the text of the file is tokenized and indexed, but not stored.

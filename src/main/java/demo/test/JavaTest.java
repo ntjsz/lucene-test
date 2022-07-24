@@ -8,7 +8,7 @@ import java.util.List;
 
 public class JavaTest {
     public static void main(String[] args) {
-/*        String docsPath = "src/main/resources/doc/doc-src.txt";
+/*        String docsPath = "src/main/resources/doc/0.txt";
         final Path docDir = Paths.get(docsPath);
         try {
             System.out.println(docDir.toAbsolutePath());
