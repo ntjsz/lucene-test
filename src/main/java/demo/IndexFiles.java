@@ -95,6 +95,7 @@ public class IndexFiles {
             iwc.setRAMBufferSizeMB(256.0);
             System.setProperty(ConcurrentMergeScheduler.DEFAULT_SPINS_PROPERTY, "false");
             IndexWriter writer = new IndexWriter(dir, iwc);
+//            anotherThread(pointList, docDir, writer);
             indexDocs(writer, docDir, pointList);
 
             // NOTE: if you want to maximize search performance,
@@ -104,7 +105,7 @@ public class IndexFiles {
             // you're done adding documents to it):
             //
             // writer.forceMerge(1);
-
+//            writer.commit();
             writer.close();
 
             Date end = new Date();
@@ -113,6 +114,22 @@ public class IndexFiles {
         } catch (IOException e) {
             System.out.println(" caught a " + e.getClass() +
                     "\n with message: " + e.getMessage());
+        }
+    }
+
+    private static void anotherThread(List<Long> pointList, Path docDir, IndexWriter writer) {
+        Thread thread = new Thread(()-> {
+            try {
+                indexDocs(writer, docDir, pointList);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread.start();
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
